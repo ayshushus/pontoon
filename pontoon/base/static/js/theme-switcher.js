@@ -31,6 +31,12 @@ $(function () {
     }; Secure`;
   }
 
+  function storeEditorTheme(editorTheme) {
+    document.cookie = `editor_theme=${editorTheme}; path=/; max-age=${
+      60 * 60 * 24 * 365
+    }; Secure`;
+  }
+
   window
     .matchMedia('(prefers-color-scheme: dark)')
     .addEventListener('change', function () {
@@ -46,7 +52,9 @@ $(function () {
     applyTheme('system');
   }
 
-  $('.appearance .toggle-button button').click(function (e) {
+  $(
+    '.appearance .theme-field:not(.editor-theme-field) .toggle-button button',
+  ).click(function (e) {
     e.preventDefault();
     e.stopPropagation();
 
@@ -57,6 +65,8 @@ $(function () {
     }
 
     const theme = self.val();
+    const mainSelector =
+      '.appearance .theme-field:not(.editor-theme-field) .toggle-button button';
 
     $.ajax({
       url: '/user/theme/',
@@ -66,10 +76,8 @@ $(function () {
         theme: theme,
       },
       success: function () {
-        $('.appearance .toggle-button button').removeClass('active');
-        $(`.appearance .toggle-button button[value=${theme}]`).addClass(
-          'active',
-        );
+        $(mainSelector).removeClass('active');
+        $(`${mainSelector}[value=${theme}]`).addClass('active');
         applyTheme(theme);
 
         // Set the data-theme attribute after successfully changing the theme
@@ -80,4 +88,26 @@ $(function () {
       },
     });
   });
+
+  $('.appearance .editor-theme-field .toggle-button button').click(
+    function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const self = $(this);
+
+      if (self.is('.active')) {
+        return;
+      }
+
+      const editorTheme = self.val();
+      const editorSelector =
+        '.appearance .editor-theme-field .toggle-button button';
+
+      storeEditorTheme(editorTheme);
+      $(editorSelector).removeClass('active');
+      $(`${editorSelector}[value=${editorTheme}]`).addClass('active');
+      $('body').attr('data-editor-theme', editorTheme);
+    },
+  );
 });
