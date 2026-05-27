@@ -28,3 +28,12 @@ def theme_class(request):
         theme = request.COOKIES.get("system_theme", "system")
 
     return f"{theme}-theme"
+
+
+@register.filter
+def editor_theme(request):
+    """Get editor theme preference from cookie (defaults to 'match')."""
+    value = request.COOKIES.get("editor_theme", "match")
+    if value not in ("dark", "light", "match"):
+        return "match"
+    return value

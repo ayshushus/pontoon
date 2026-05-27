@@ -77,6 +77,15 @@ def theme_class(request):
 
 
 @library.global_function
+def editor_theme(request):
+    """Get editor theme preference from cookie (defaults to 'match')."""
+    value = request.COOKIES.get("editor_theme", "match")
+    if value not in ("dark", "light", "match"):
+        return "match"
+    return value
+
+
+@library.global_function
 def static(path):
     return staticfiles_storage.url(path)
 
