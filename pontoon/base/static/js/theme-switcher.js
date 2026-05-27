@@ -31,12 +31,6 @@ $(function () {
     }; Secure`;
   }
 
-  function storeEditorTheme(editorTheme) {
-    document.cookie = `editor_theme=${editorTheme}; path=/; max-age=${
-      60 * 60 * 24 * 365
-    }; Secure`;
-  }
-
   window
     .matchMedia('(prefers-color-scheme: dark)')
     .addEventListener('change', function () {
@@ -108,10 +102,22 @@ $(function () {
       const editorSelector =
         '.appearance .editor-theme-field .toggle-button button';
 
-      storeEditorTheme(editorTheme);
-      $(editorSelector).removeClass('active');
-      $(`${editorSelector}[value=${editorTheme}]`).addClass('active');
-      $('body').attr('data-editor-theme', editorTheme);
+      $.ajax({
+        url: '/user/editor-theme/',
+        type: 'POST',
+        data: {
+          csrfmiddlewaretoken: $('body').data('csrf'),
+          editor_theme: editorTheme,
+        },
+        success: function () {
+          $(editorSelector).removeClass('active');
+          $(`${editorSelector}[value=${editorTheme}]`).addClass('active');
+          $('body').attr('data-editor-theme', editorTheme);
+        },
+        error: function () {
+          Pontoon.endLoader('Oops, something went wrong.', 'error');
+        },
+      });
     },
   );
 });
