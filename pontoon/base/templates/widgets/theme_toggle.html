@@ -30,7 +30,7 @@
   </span>
 {% endmacro %}
 
-{% macro editor_button(current, long_name=True) %}
+{% macro editor_button(user, long_name=True) %}
   {% set dark = "Dark theme" if long_name else "Dark" %}
   {% set light = "Light theme" if long_name else "Light" %}
   {% set match = "Match main" if long_name else "Match" %}
@@ -38,7 +38,7 @@
     <button
       type="button"
       value="dark"
-      class="dark {% if current == 'dark' %}active{% endif %}"
+      class="dark {% if user.profile.editor_theme == 'dark' %}active{% endif %}"
       title="Use a dark editor"
     >
       <i class="icon far fa-moon"></i>{{ dark }}
@@ -46,7 +46,7 @@
     <button
       type="button"
       value="light"
-      class="light {% if current == 'light' %}active{% endif %}"
+      class="light {% if user.profile.editor_theme == 'light' %}active{% endif %}"
       title="Use a light editor"
     >
       <i class="icon fas fa-sun"></i>{{ light }}
@@ -54,7 +54,7 @@
     <button
       type="button"
       value="match"
-      class="match {% if current == 'match' %}active{% endif %}"
+      class="match {% if user.profile.editor_theme == 'match' %}active{% endif %}"
       title="Use the same theme as the main appearance"
     >
       <i class="icon fas fa-link"></i>{{ match }}

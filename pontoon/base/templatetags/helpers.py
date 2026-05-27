@@ -77,12 +77,11 @@ def theme_class(request):
 
 
 @library.global_function
-def editor_theme(request):
-    """Get editor theme preference from cookie (defaults to 'match')."""
-    value = request.COOKIES.get("editor_theme", "match")
-    if value not in ("dark", "light", "match"):
-        return "match"
-    return value
+def user_editor_theme(user):
+    """Get user's editor theme or return 'match' if user is not authenticated."""
+    if user.is_authenticated:
+        return user.profile.editor_theme
+    return "match"
 
 
 @library.global_function
