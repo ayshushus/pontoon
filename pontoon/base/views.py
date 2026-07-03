@@ -245,6 +245,7 @@ def _get_entities_list(
 
 
 def _get_paginated_entities(
+    user: User,
     locale: Locale,
     preferred_source_locale: str | None,
     project: Project,
@@ -264,24 +265,43 @@ def _get_paginated_entities(
         return JsonResponse({"has_next": False, "stats": {}})
 
     requested_entity = cleaned_data["entity"] if page_idx == 1 else None
+    requested_entity_location = None
     if requested_entity and not entities.filter(pk=requested_entity).exists():
+        located = (
+            Entity.objects.filter(
+                pk=requested_entity,
+                obsolete=False,
+                resource__translatedresources__locale=locale,
+                resource__project__disabled=False,
+                resource__project__system_project=False,
+                resource__project__in=Project.objects.visible_for(user),
+            )
+            .values_list("resource__project__slug", "resource__path")
+            .first()
+        )
+        if located:
+            requested_entity_location = {
+                "pk": requested_entity,
+                "project": located[0],
+                "resource": located[1],
+            }
         requested_entity = None
 
-    return JsonResponse(
-        {
-            "entities": map_entities_to_json(
-                locale,
-                preferred_source_locale,
-                cast(QuerySet[Entity], entities_page.object_list),
-                requested_entity=requested_entity,
-            ),
-            "has_next": entities_page.has_next(),
-            "stats": TranslatedResource.objects.query_stats(
-                project, cleaned_data["paths"], locale
-            ),
-        },
-        safe=False,
-    )
+    response = {
+        "entities": map_entities_to_json(
+            locale,
+            preferred_source_locale,
+            cast(QuerySet[Entity], entities_page.object_list),
+            requested_entity=requested_entity,
+        ),
+        "has_next": entities_page.has_next(),
+        "stats": TranslatedResource.objects.query_stats(
+            project, cleaned_data["paths"], locale
+        ),
+    }
+    if requested_entity_location is not None:
+        response["requested_entity_location"] = requested_entity_location
+    return JsonResponse(response, safe=False)
 
 
 @csrf_exempt
@@ -366,7 +386,7 @@ def entities(request: HttpRequest):
 
     # Out-of-context view: paginate entities
     return _get_paginated_entities(
-        locale, preferred_source_locale, project, form.cleaned_data, entities
+        user, locale, preferred_source_locale, project, form.cleaned_data, entities
     )
 
 
