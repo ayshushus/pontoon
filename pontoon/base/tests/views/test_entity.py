@@ -85,6 +85,7 @@ def test_entities_string_not_shown_if_not_matching_filters(member, entity_a, loc
     entity_pks = [e["pk"] for e in data["entities"]]
     assert entity_a.pk not in entity_pks
 
+
 @pytest.mark.django_db
 def test_entities_not_matching_string_reports_location(member, entity_a, locale_a):
     """
