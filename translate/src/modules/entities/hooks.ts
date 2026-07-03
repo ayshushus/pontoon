@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import type { Entity } from '~/api/entity';
+import type { Entity, RequestedEntityLocation } from '~/api/entity';
 import { EntityView } from '~/context/EntityView';
 import { HistoryData } from '~/context/HistoryData';
 import { Location } from '~/context/Location';
@@ -9,6 +9,23 @@ import { useAppSelector } from '~/hooks';
 import { ENTITIES } from './reducer';
 
 export const useEntities = () => useAppSelector((state) => state[ENTITIES]);
+
+export type EntityNotFound = {
+  show: boolean;
+  entityLocation: RequestedEntityLocation | null;
+};
+
+export function useEntityNotFound(): EntityNotFound {
+  const { entity } = useContext(Location);
+  const { entities, requestedEntityLocation } = useEntities();
+
+  const found = entities.some((e) => e.pk === entity);
+
+  return {
+    show: entity > 0 && requestedEntityLocation != null && !found,
+    entityLocation: requestedEntityLocation,
+  };
+}
 
 /** Next entity, or `null` if no next entity is available */
 export function useNextEntity(): Entity | null {

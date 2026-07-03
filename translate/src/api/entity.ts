@@ -79,8 +79,20 @@ export async function batchEditEntities(
   return await POST('/batch-edit-translations/', payload);
 }
 
+/** Where a requested string lives, when it isn't part of the results. */
+export type RequestedEntityLocation = {
+  readonly pk: number;
+  readonly project: string;
+  readonly resource: string;
+};
+
 type EntitiesResponse =
-  | { entities: Entity[]; has_next?: boolean; stats: APIStats }
+  | {
+      entities: Entity[];
+      has_next?: boolean;
+      stats: APIStats;
+      requested_entity_location?: RequestedEntityLocation;
+    }
   | { entities?: never; has_next: false; stats: object };
 
 /**
