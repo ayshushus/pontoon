@@ -346,6 +346,22 @@ entitieslist-EntitiesList--edit-selected =
     .title = Edit Selected Strings
 
 
+## String not found page
+## Shown when the requested string doesn't match the rest of the query
+
+entities-StringNotFound--description =
+    String { $string } is in { $stringResource } ({ $stringProject }). { $hasFilters ->
+        [filtered] You’re browsing { $queryLabel }, filtered by { $filters }.
+       *[all] You’re browsing { $queryLabel }.
+    }
+
+entities-StringNotFound--go-to-string = See string { $string } in { $stringResource }
+entities-StringNotFound--go-to-string-hint = Keep the string, drop your filters.
+
+entities-StringNotFound--show-matching = See other strings in { $queryLabel }
+entities-StringNotFound--show-matching-hint = Keep your filters, drop the string.
+
+
 ## Translation Form
 
 translationform--label-with-example = { $label } (e.g. <stress>{ $example }</stress>)

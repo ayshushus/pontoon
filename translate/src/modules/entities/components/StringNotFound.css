@@ -1,0 +1,56 @@
+/* Shown in the editor panel in place of the string, when the requested string
+ * doesn't match the rest of the query (#2921). */
+#string-not-found {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  overflow: auto;
+  padding: 0 30px;
+  text-align: center;
+}
+
+#string-not-found .inner {
+  max-width: 500px;
+}
+
+#string-not-found .description {
+  color: var(--white-1);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+#string-not-found .actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+#string-not-found .action {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#string-not-found .hint {
+  color: var(--light-grey-7);
+  font-size: 13px;
+}
+
+#string-not-found .actions button {
+  background: transparent;
+  border: 1.5px solid var(--status-translated);
+  border-radius: 2px;
+  color: var(--white-1);
+  font-size: 14px;
+  font-weight: 300;
+  height: 40px;
+  line-height: 17px;
+  padding: 10px 25px;
+}
+
+#string-not-found .actions button:hover {
+  background: var(--status-translated);
+}

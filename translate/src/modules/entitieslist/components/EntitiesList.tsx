@@ -91,7 +91,14 @@ export function EntitiesList(): React.ReactElement<'div'> {
 
   const showNotification = useContext(ShowNotification);
   const batchactions = useBatchactions();
-  const { entities, fetchCount, fetching, hasMore, page } = useEntities();
+  const {
+    entities,
+    fetchCount,
+    fetching,
+    hasMore,
+    page,
+    requestedEntityLocation,
+  } = useEntities();
   const location = useContext(Location);
   const isAuthUser = useAppSelector((state) => state[USER].isAuthenticated);
   const { checkUnsavedChanges } = useContext(UnsavedActions);
@@ -142,13 +149,19 @@ export function EntitiesList(): React.ReactElement<'div'> {
   /*
    * If entity not provided through a URL parameter, or if provided entity
    * cannot be found, select the first entity in the list.
+   *
+   * Exception: a `string` that is valid and viewable but doesn't match the
+   * current query is handled by the "string not found" page
    */
   useEffect(() => {
     const selectedEntity = location.entity;
     const firstEntity = entities[0];
     const isValid = entities.some(({ pk }) => pk === selectedEntity);
 
-    if ((!selectedEntity || !isValid) && firstEntity) {
+    const stringNotFound =
+      selectedEntity > 0 && !isValid && requestedEntityLocation != null;
+
+    if ((!selectedEntity || !isValid) && firstEntity && !stringNotFound) {
       // Replace the last history item instead of pushing a new one.
       selectEntity(firstEntity, true);
 
