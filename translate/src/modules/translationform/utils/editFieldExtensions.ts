@@ -17,7 +17,7 @@ import {
   syntaxHighlighting,
 } from '@codemirror/language';
 import { Extension } from '@codemirror/state';
-import { EditorView, keymap, tooltips } from '@codemirror/view';
+import { drawSelection, EditorView, keymap, tooltips } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 import { useContext, useEffect, useRef } from 'react';
 
@@ -85,6 +85,7 @@ export const getExtensions = (
   ref: ReturnType<typeof useKeyHandlers>,
 ): Extension[] => [
   history(),
+  drawSelection(),
   // .main-column sets overflow-y:auto, which disables overflow-x:visible,
   // and so an absolute-positioned tooltip in the .editor would introduce
   // horizontal scrolling if it overflows the right edge of .main-column.
