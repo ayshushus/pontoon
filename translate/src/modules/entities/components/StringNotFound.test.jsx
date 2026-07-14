@@ -8,10 +8,19 @@ import { StringNotFound } from './StringNotFound';
 
 const ENTITY_LOCATION = { pk: 99, project: 'thunderbird', resource: 'foo.ftl' };
 
-function mount(notFound) {
-  const history = createMemoryHistory({
-    initialEntries: ['/kg/firefox/all-resources/?status=missing&string=99'],
-  });
+// Provide the filters panel's own label so the component resolves the active
+// filter's name through the localization system, not a hardcoded string.
+const FTL = `
+search-FiltersPanel--status-name-missing = Missing
+search-FiltersPanel--status-name-warnings = Warnings
+search-FiltersPanel--status-name-errors = Errors
+`;
+
+function mount(
+  notFound,
+  url = '/kg/firefox/all-resources/?status=missing&string=99',
+) {
+  const history = createMemoryHistory({ initialEntries: [url] });
   const spy = vi.fn();
   history.listen(spy);
   const store = createReduxStore();
@@ -20,6 +29,7 @@ function mount(notFound) {
     store,
     { notFound },
     history,
+    FTL,
   );
   return { ...result, spy };
 }
@@ -31,10 +41,10 @@ describe('<StringNotFound>', () => {
       entityLocation: ENTITY_LOCATION,
     });
 
-    // The copy names the string + its resource/project, the current location,
-    // and the specific active filter.
+    // The copy names the string + its resource/project, the current view, and
+    // the active filter — using the filters panel's own localized label.
     getByText(/String 99 is in foo\.ftl \(thunderbird\)/);
-    getByText(/browsing firefox, filtered by Status: Missing/);
+    getByText(/viewing firefox, filtered by Missing/);
 
     fireEvent.click(getByRole('button', { name: 'See string 99 in foo.ftl' }));
 
@@ -58,6 +68,37 @@ describe('<StringNotFound>', () => {
     expect(pathname).toBe('/kg/firefox/all-resources/');
     expect(search).toContain('status=missing');
     expect(search).not.toContain('string=');
+  });
+
+  it('joins multiple filter labels in the UI language', () => {
+    const { getByText } = mount(
+      { show: true, entityLocation: ENTITY_LOCATION },
+      '/kg/firefox/all-resources/?status=missing,warnings,errors&string=99',
+    );
+
+    // en-US UI bundle -> Intl.ListFormat uses the English connector + commas.
+    getByText(/filtered by Missing, Warnings, and Errors/);
+  });
+
+  it('shows the search term as its own filter', () => {
+    const { getByText } = mount(
+      { show: true, entityLocation: ENTITY_LOCATION },
+      '/kg/firefox/all-resources/?search=hi&string=99',
+    );
+
+    getByText(/filtered by search .hi./);
+  });
+
+  it('omits the filter clause when no filters are active', () => {
+    const { getByText, queryByText } = mount(
+      { show: true, entityLocation: ENTITY_LOCATION },
+      '/kg/firefox/all-resources/?string=99',
+    );
+
+    getByText(
+      /String 99 is in foo\.ftl \(thunderbird\)\. You’re viewing firefox\./,
+    );
+    expect(queryByText(/filtered by/)).toBeNull();
   });
 
   it('renders nothing without a string location', () => {
