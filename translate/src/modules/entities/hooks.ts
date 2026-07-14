@@ -20,8 +20,7 @@ export function useEntityNotFound(): EntityNotFound {
   const { requestedEntityLocation } = useEntities();
 
   return {
-    show:
-      requestedEntityLocation != null && requestedEntityLocation.pk === entity,
+    show: requestedEntityLocation?.pk === entity,
     entityLocation: requestedEntityLocation,
   };
 }
