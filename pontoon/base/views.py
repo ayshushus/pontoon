@@ -300,7 +300,7 @@ def _get_paginated_entities(
         ),
     }
     if requested_entity_location is not None:
-        response["requested_entity_location"] = requested_entity_location
+        response["requested_entity"] = requested_entity_location
     return JsonResponse(response, safe=False)
 
 

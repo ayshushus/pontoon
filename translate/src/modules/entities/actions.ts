@@ -73,7 +73,7 @@ export const getEntities =
         type: RECEIVE_ENTITIES,
         entities: content.entities,
         hasMore: content.has_next,
-        requestedEntityLocation: content.requested_entity_location ?? null,
+        requestedEntityLocation: content.requested_entity ?? null,
       });
       dispatch(updateStats(content.stats));
     }

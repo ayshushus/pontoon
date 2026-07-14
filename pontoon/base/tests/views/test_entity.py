@@ -116,7 +116,7 @@ def test_entities_not_matching_string_reports_location(member, entity_a, locale_
     )
 
     data = json.loads(response.content)
-    assert data["requested_entity_location"] == {
+    assert data["requested_entity"] == {
         "pk": entity_a.pk,
         "project": entity_a.resource.project.slug,
         "resource": entity_a.resource.path,
@@ -137,4 +137,4 @@ def test_entities_not_matching_string_reports_location(member, entity_a, locale_
 
     data = json.loads(response.content)
     assert entity_a.pk in [e["pk"] for e in data["entities"]]
-    assert "requested_entity_location" not in data
+    assert "requested_entity" not in data

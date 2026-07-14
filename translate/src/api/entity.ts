@@ -91,7 +91,7 @@ type EntitiesResponse =
       entities: Entity[];
       has_next?: boolean;
       stats: APIStats;
-      requested_entity_location?: RequestedEntityLocation;
+      requested_entity?: RequestedEntityLocation;
     }
   | { entities?: never; has_next: false; stats: object };
 
