@@ -158,8 +158,7 @@ export function EntitiesList(): React.ReactElement<'div'> {
     const firstEntity = entities[0];
     const isValid = entities.some(({ pk }) => pk === selectedEntity);
 
-    const stringNotFound =
-      selectedEntity > 0 && !isValid && requestedEntityLocation != null;
+    const stringNotFound = requestedEntityLocation?.pk === selectedEntity;
 
     if ((!selectedEntity || !isValid) && firstEntity && !stringNotFound) {
       // Replace the last history item instead of pushing a new one.

@@ -17,12 +17,11 @@ export type EntityNotFound = {
 
 export function useEntityNotFound(): EntityNotFound {
   const { entity } = useContext(Location);
-  const { entities, requestedEntityLocation } = useEntities();
-
-  const found = entities.some((e) => e.pk === entity);
+  const { requestedEntityLocation } = useEntities();
 
   return {
-    show: entity > 0 && requestedEntityLocation != null && !found,
+    show:
+      requestedEntityLocation != null && requestedEntityLocation.pk === entity,
     entityLocation: requestedEntityLocation,
   };
 }
