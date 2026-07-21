@@ -366,7 +366,7 @@ entities-StringNotFound--go-to-string = See string { $stringId } in { $stringRes
 entities-StringNotFound--go-to-string-hint = Search for the requested string, reset current filters.
 
 entities-StringNotFound--show-matching = See other strings in { $queryLabel }
-entities-StringNotFound--show-matching-hint = Keep your filters, drop the string.
+entities-StringNotFound--show-matching-hint = Keep current filters, display the first available string.
 
 
 ## Translation Form
