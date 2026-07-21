@@ -363,7 +363,7 @@ entities-StringNotFound--filter-search = search “{ $search }”
 entities-StringNotFound--filter-other = other filters
 
 entities-StringNotFound--go-to-string = See string { $stringId } in { $stringResource }
-entities-StringNotFound--go-to-string-hint = Keep the string, drop your filters.
+entities-StringNotFound--go-to-string-hint = Search for the requested string, reset current filters.
 
 entities-StringNotFound--show-matching = See other strings in { $queryLabel }
 entities-StringNotFound--show-matching-hint = Keep your filters, drop the string.
