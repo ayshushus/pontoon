@@ -346,16 +346,18 @@ entitieslist-EntitiesList--edit-selected =
     .title = Edit Selected Strings
 
 
-## String not found page
-## Shown when the requested string doesn't match the rest of the query
+## StringNotFound
+## Shown in the editor when the string in the URL is valid but not in the list
+## on screen. One description per case: hidden by filters, or living in another
+## resource, project, or outside all open projects.
 
-# Shown when the string lives in the current project but is hidden by the
-# active filters (status, search, tags, …).
-entities-StringNotFound--description-filtered = String { $stringId } is in { $stringResource } ({ $stringProject }), but it doesn’t match the filters active in { $queryLabel }.
+entities-StringNotFound--description-filtered = String { $stringId } is in { $stringResource } ({ $stringProject }), but it doesn’t match your current filters.
 
-# Shown when the string lives in a different project or resource, so no filter
-# is involved.
-entities-StringNotFound--description-unfiltered = String { $stringId } is in { $stringResource } ({ $stringProject }). You’re viewing { $queryLabel }.
+entities-StringNotFound--description-in-resource = String { $stringId } is in { $stringResource } ({ $stringProject }). You’re viewing { $viewResource } ({ $viewProject }).
+
+entities-StringNotFound--description-in-project = String { $stringId } is in { $stringResource } ({ $stringProject }). You’re viewing { $viewProject }.
+
+entities-StringNotFound--description-in-all-projects = String { $stringId } is in { $stringResource } ({ $stringProject }). You’re viewing all projects.
 
 entities-StringNotFound--go-to-string = See string { $stringId } in { $stringResource }
 entities-StringNotFound--go-to-string-hint = Search for the requested string, reset current filters.

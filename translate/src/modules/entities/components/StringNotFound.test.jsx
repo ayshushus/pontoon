@@ -32,7 +32,6 @@ describe('<StringNotFound>', () => {
       entityLocation: ENTITY_LOCATION,
     });
 
-    // The copy names the string + its resource/project and the current view.
     getByText(/String 99 is in foo\.ftl \(thunderbird\)/);
 
     fireEvent.click(getByRole('button', { name: 'See string 99 in foo.ftl' }));
@@ -48,7 +47,6 @@ describe('<StringNotFound>', () => {
       entityLocation: ENTITY_LOCATION,
     });
 
-    // No single resource selected, so the current view is named by project.
     fireEvent.click(
       getByRole('button', { name: 'See other strings in firefox' }),
     );
@@ -59,34 +57,43 @@ describe('<StringNotFound>', () => {
     expect(search).not.toContain('string=');
   });
 
-  it('reports filters are active without listing them', () => {
-    const { getByText } = mount(
-      { show: true, entityLocation: ENTITY_LOCATION },
-      '/kg/firefox/all-resources/?status=missing,warnings,errors&string=99',
-    );
+  it('blames the filters, not a place, when the string is in the open project', () => {
+    const { getByText, queryByText } = mount({
+      show: true,
+      entityLocation: { pk: 99, project: 'firefox', resource: 'toolbar.ftl' },
+    });
 
-    getByText(/doesn’t match the filters active in firefox/);
+    getByText(
+      /String 99 is in toolbar\.ftl \(firefox\), but it doesn’t match your current filters\./,
+    );
+    expect(queryByText(/You’re viewing/)).toBeNull();
   });
 
-  it('treats a search term as an active filter', () => {
+  it('names the viewed resource together with its project', () => {
     const { getByText } = mount(
       { show: true, entityLocation: ENTITY_LOCATION },
-      '/kg/firefox/all-resources/?search=hi&string=99',
+      '/kg/firefox/browser.ftl/?string=99',
     );
 
-    getByText(/doesn’t match the filters active in firefox/);
+    getByText(/You’re viewing browser\.ftl \(firefox\)\./);
   });
 
-  it('uses the unfiltered wording when no filters are active', () => {
-    const { getByText, queryByText } = mount(
+  it('names the project when viewing a whole project', () => {
+    const { getByText } = mount(
       { show: true, entityLocation: ENTITY_LOCATION },
       '/kg/firefox/all-resources/?string=99',
     );
 
-    getByText(
-      /String 99 is in foo\.ftl \(thunderbird\)\. You’re viewing firefox\./,
+    getByText(/You’re viewing firefox\./);
+  });
+
+  it('says "all projects" when viewing every project', () => {
+    const { getByText } = mount(
+      { show: true, entityLocation: ENTITY_LOCATION },
+      '/kg/all-projects/all-resources/?string=99',
     );
-    expect(queryByText(/doesn’t match the filters/)).toBeNull();
+
+    getByText(/You’re viewing all projects\./);
   });
 
   it('renders nothing without a string location', () => {

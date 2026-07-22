@@ -7,24 +7,6 @@ import type { EntityNotFound } from '../hooks';
 
 import './StringNotFound.css';
 
-function hasActiveFilters(location: Location): boolean {
-  const status = location.status
-    ? location.status.split(',').filter((s) => s && s !== 'all')
-    : [];
-  return (
-    status.length > 0 ||
-    Boolean(location.extra) ||
-    Boolean(location.search) ||
-    Boolean(location.tag) ||
-    Boolean(location.author) ||
-    Boolean(location.time) ||
-    Boolean(location.created_time) ||
-    Boolean(location.reviewer) ||
-    Boolean(location.review_time) ||
-    Boolean(location.exclude_self_reviewed)
-  );
-}
-
 /**
  * Shown in the editor panel when the `string` URL parameter points at a valid,
  * viewable string that doesn't match the rest of the query (#2921).
@@ -44,12 +26,18 @@ export function StringNotFound({
   const { push } = location;
   const stringId = String(entityLocation.pk);
   const { project: stringProject, resource: stringResource } = entityLocation;
-  const queryLabel =
-    location.resource && location.resource !== 'all-resources'
-      ? location.resource
-      : location.project;
 
-  const filtered = hasActiveFilters(location);
+  const viewProject = location.project;
+  const viewResource = location.resource;
+  const allProjects = viewProject === 'all-projects';
+  const allResources = !viewResource || viewResource === 'all-resources';
+
+  const queryLabel = allResources ? viewProject : viewResource;
+
+  const filteredOut =
+    !allProjects &&
+    stringProject === viewProject &&
+    (allResources || stringResource === viewResource);
 
   const goToString = () =>
     push({
@@ -61,28 +49,63 @@ export function StringNotFound({
 
   const showMatching = () => push({ entity: 0 });
 
+  let description: React.ReactElement;
+  if (filteredOut) {
+    description = (
+      <Localized
+        id='entities-StringNotFound--description-filtered'
+        vars={{ stringId, stringProject, stringResource }}
+      >
+        <p className='description'>
+          {`String ${stringId} is in ${stringResource} (${stringProject}), but it doesn’t match your current filters.`}
+        </p>
+      </Localized>
+    );
+  } else if (allProjects) {
+    description = (
+      <Localized
+        id='entities-StringNotFound--description-in-all-projects'
+        vars={{ stringId, stringProject, stringResource }}
+      >
+        <p className='description'>
+          {`String ${stringId} is in ${stringResource} (${stringProject}). You’re viewing all projects.`}
+        </p>
+      </Localized>
+    );
+  } else if (allResources) {
+    description = (
+      <Localized
+        id='entities-StringNotFound--description-in-project'
+        vars={{ stringId, stringProject, stringResource, viewProject }}
+      >
+        <p className='description'>
+          {`String ${stringId} is in ${stringResource} (${stringProject}). You’re viewing ${viewProject}.`}
+        </p>
+      </Localized>
+    );
+  } else {
+    description = (
+      <Localized
+        id='entities-StringNotFound--description-in-resource'
+        vars={{
+          stringId,
+          stringProject,
+          stringResource,
+          viewResource,
+          viewProject,
+        }}
+      >
+        <p className='description'>
+          {`String ${stringId} is in ${stringResource} (${stringProject}). You’re viewing ${viewResource} (${viewProject}).`}
+        </p>
+      </Localized>
+    );
+  }
+
   return (
     <section id='string-not-found'>
       <div className='inner'>
-        {filtered ? (
-          <Localized
-            id='entities-StringNotFound--description-filtered'
-            vars={{ stringId, stringProject, stringResource, queryLabel }}
-          >
-            <p className='description'>
-              {`String ${stringId} is in ${stringResource} (${stringProject}), but it doesn’t match the filters active in ${queryLabel}.`}
-            </p>
-          </Localized>
-        ) : (
-          <Localized
-            id='entities-StringNotFound--description-unfiltered'
-            vars={{ stringId, stringProject, stringResource, queryLabel }}
-          >
-            <p className='description'>
-              {`String ${stringId} is in ${stringResource} (${stringProject}). You’re viewing ${queryLabel}.`}
-            </p>
-          </Localized>
-        )}
+        {description}
         <div className='actions'>
           <div className='action'>
             <Localized
@@ -94,7 +117,9 @@ export function StringNotFound({
               >{`See string ${stringId} in ${stringResource}`}</button>
             </Localized>
             <Localized id='entities-StringNotFound--go-to-string-hint'>
-              <span className='hint'>Keep the string, drop your filters.</span>
+              <span className='hint'>
+                Search for the requested string, reset current filters.
+              </span>
             </Localized>
           </div>
           <div className='action'>
@@ -107,7 +132,9 @@ export function StringNotFound({
               >{`See other strings in ${queryLabel}`}</button>
             </Localized>
             <Localized id='entities-StringNotFound--show-matching-hint'>
-              <span className='hint'>Keep your filters, drop the string.</span>
+              <span className='hint'>
+                Keep current filters, display the first available string.
+              </span>
             </Localized>
           </div>
         </div>
