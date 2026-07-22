@@ -1,4 +1,4 @@
-import { Localized, ReactLocalization, useLocalization } from '@fluent/react';
+import { Localized } from '@fluent/react';
 import React, { useContext } from 'react';
 
 import { emptyParams, Location } from '~/context/Location';
@@ -7,61 +7,22 @@ import type { EntityNotFound } from '../hooks';
 
 import './StringNotFound.css';
 
-const splitParam = (value: string | null): string[] =>
-  value ? value.split(',').filter(Boolean) : [];
-
-function activeFilterLabels(
-  location: Location,
-  l10n: ReactLocalization,
-): string[] {
-  const labels: string[] = [];
-  for (const slug of splitParam(location.status)) {
-    if (slug !== 'all') {
-      labels.push(
-        l10n.getString(
-          `search-FiltersPanel--status-name-${slug}`,
-          undefined,
-          slug,
-        ),
-      );
-    }
-  }
-  for (const slug of splitParam(location.extra)) {
-    labels.push(
-      l10n.getString(
-        `search-FiltersPanel--extra-name-${slug}`,
-        undefined,
-        slug,
-      ),
-    );
-  }
-  if (location.search) {
-    labels.push(
-      l10n.getString(
-        'entities-StringNotFound--filter-search',
-        { search: location.search },
-        `search “${location.search}”`,
-      ),
-    );
-  }
-  if (
-    location.tag ||
-    location.author ||
-    location.time ||
-    location.created_time ||
-    location.reviewer ||
-    location.review_time ||
-    location.exclude_self_reviewed
-  ) {
-    labels.push(
-      l10n.getString(
-        'entities-StringNotFound--filter-other',
-        undefined,
-        'other filters',
-      ),
-    );
-  }
-  return labels;
+function hasActiveFilters(location: Location): boolean {
+  const status = location.status
+    ? location.status.split(',').filter((s) => s && s !== 'all')
+    : [];
+  return (
+    status.length > 0 ||
+    Boolean(location.extra) ||
+    Boolean(location.search) ||
+    Boolean(location.tag) ||
+    Boolean(location.author) ||
+    Boolean(location.time) ||
+    Boolean(location.created_time) ||
+    Boolean(location.reviewer) ||
+    Boolean(location.review_time) ||
+    Boolean(location.exclude_self_reviewed)
+  );
 }
 
 /**
@@ -74,7 +35,6 @@ export function StringNotFound({
   notFound: EntityNotFound;
 }): React.ReactElement<'section'> | null {
   const location = useContext(Location);
-  const { l10n } = useLocalization();
   const { entityLocation } = notFound;
 
   if (!entityLocation) {
@@ -89,20 +49,7 @@ export function StringNotFound({
       ? location.resource
       : location.project;
 
-  // Join in the UI language (what the sentence is rendered in), not locale
-  const uiLocale = [...l10n.bundles][0]?.locales[0] ?? 'en-US';
-  const labels = activeFilterLabels(location, l10n);
-  let filters = '';
-  if (labels.length) {
-    try {
-      filters = new Intl.ListFormat(uiLocale, {
-        style: 'long',
-        type: 'conjunction',
-      }).format(labels);
-    } catch {
-      filters = labels.join(', ');
-    }
-  }
+  const filtered = hasActiveFilters(location);
 
   const goToString = () =>
     push({
@@ -117,19 +64,13 @@ export function StringNotFound({
   return (
     <section id='string-not-found'>
       <div className='inner'>
-        {filters ? (
+        {filtered ? (
           <Localized
             id='entities-StringNotFound--description-filtered'
-            vars={{
-              stringId,
-              stringProject,
-              stringResource,
-              queryLabel,
-              filters,
-            }}
+            vars={{ stringId, stringProject, stringResource, queryLabel }}
           >
             <p className='description'>
-              {`String ${stringId} is in ${stringResource} (${stringProject}). You’re viewing ${queryLabel}, filtered by ${filters}.`}
+              {`String ${stringId} is in ${stringResource} (${stringProject}), but it doesn’t match the filters active in ${queryLabel}.`}
             </p>
           </Localized>
         ) : (

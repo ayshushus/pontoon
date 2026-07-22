@@ -349,18 +349,13 @@ entitieslist-EntitiesList--edit-selected =
 ## String not found page
 ## Shown when the requested string doesn't match the rest of the query
 
-# $filters is a localized, list-formatted summary of the active filters
-# (e.g. "Missing, Rejected"), built from the existing filters-panel labels.
-entities-StringNotFound--description-filtered = String { $stringId } is in { $stringResource } ({ $stringProject }). You’re viewing { $queryLabel }, filtered by { $filters }.
+# Shown when the string lives in the current project but is hidden by the
+# active filters (status, search, tags, …).
+entities-StringNotFound--description-filtered = String { $stringId } is in { $stringResource } ({ $stringProject }), but it doesn’t match the filters active in { $queryLabel }.
 
+# Shown when the string lives in a different project or resource, so no filter
+# is involved.
 entities-StringNotFound--description-unfiltered = String { $stringId } is in { $stringResource } ({ $stringProject }). You’re viewing { $queryLabel }.
-
-# The active text search, shown as one item in the filters list. $search is the
-# raw query the user typed.
-entities-StringNotFound--filter-search = search “{ $search }”
-
-# Groups the remaining filters that don't have their own label (tags, authors…).
-entities-StringNotFound--filter-other = other filters
 
 entities-StringNotFound--go-to-string = See string { $stringId } in { $stringResource }
 entities-StringNotFound--go-to-string-hint = Search for the requested string, reset current filters.

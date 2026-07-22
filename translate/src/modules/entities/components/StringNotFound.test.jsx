@@ -8,14 +8,6 @@ import { StringNotFound } from './StringNotFound';
 
 const ENTITY_LOCATION = { pk: 99, project: 'thunderbird', resource: 'foo.ftl' };
 
-// Provide the filters panel's own label so the component resolves the active
-// filter's name through the localization system, not a hardcoded string.
-const FTL = `
-search-FiltersPanel--status-name-missing = Missing
-search-FiltersPanel--status-name-warnings = Warnings
-search-FiltersPanel--status-name-errors = Errors
-`;
-
 function mount(
   notFound,
   url = '/kg/firefox/all-resources/?status=missing&string=99',
@@ -29,7 +21,6 @@ function mount(
     store,
     { notFound },
     history,
-    FTL,
   );
   return { ...result, spy };
 }
@@ -41,10 +32,8 @@ describe('<StringNotFound>', () => {
       entityLocation: ENTITY_LOCATION,
     });
 
-    // The copy names the string + its resource/project, the current view, and
-    // the active filter — using the filters panel's own localized label.
+    // The copy names the string + its resource/project and the current view.
     getByText(/String 99 is in foo\.ftl \(thunderbird\)/);
-    getByText(/viewing firefox, filtered by Missing/);
 
     fireEvent.click(getByRole('button', { name: 'See string 99 in foo.ftl' }));
 
@@ -70,26 +59,25 @@ describe('<StringNotFound>', () => {
     expect(search).not.toContain('string=');
   });
 
-  it('joins multiple filter labels in the UI language', () => {
+  it('reports filters are active without listing them', () => {
     const { getByText } = mount(
       { show: true, entityLocation: ENTITY_LOCATION },
       '/kg/firefox/all-resources/?status=missing,warnings,errors&string=99',
     );
 
-    // en-US UI bundle -> Intl.ListFormat uses the English connector + commas.
-    getByText(/filtered by Missing, Warnings, and Errors/);
+    getByText(/doesn’t match the filters active in firefox/);
   });
 
-  it('shows the search term as its own filter', () => {
+  it('treats a search term as an active filter', () => {
     const { getByText } = mount(
       { show: true, entityLocation: ENTITY_LOCATION },
       '/kg/firefox/all-resources/?search=hi&string=99',
     );
 
-    getByText(/filtered by search .hi./);
+    getByText(/doesn’t match the filters active in firefox/);
   });
 
-  it('omits the filter clause when no filters are active', () => {
+  it('uses the unfiltered wording when no filters are active', () => {
     const { getByText, queryByText } = mount(
       { show: true, entityLocation: ENTITY_LOCATION },
       '/kg/firefox/all-resources/?string=99',
@@ -98,7 +86,7 @@ describe('<StringNotFound>', () => {
     getByText(
       /String 99 is in foo\.ftl \(thunderbird\)\. You’re viewing firefox\./,
     );
-    expect(queryByText(/filtered by/)).toBeNull();
+    expect(queryByText(/doesn’t match the filters/)).toBeNull();
   });
 
   it('renders nothing without a string location', () => {
