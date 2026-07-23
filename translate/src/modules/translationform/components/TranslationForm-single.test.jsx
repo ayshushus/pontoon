@@ -1,3 +1,4 @@
+import { EditorView } from '@codemirror/view';
 import React, { useContext } from 'react';
 import { act } from 'react-dom/test-utils';
 
@@ -56,7 +57,9 @@ function mountForm(string) {
     store,
   );
 
-  const view = container.querySelector('.singlefield .cm-content').cmView.view;
+  const view = EditorView.findFromDOM(
+    container.querySelector('.singlefield .cm-content'),
+  );
 
   return { actions, getResult: () => result, view };
 }
