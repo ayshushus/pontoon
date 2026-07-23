@@ -6,9 +6,13 @@ import {
   type CompletionSource,
 } from '@codemirror/autocomplete';
 import {
+  cursorLineEnd,
+  cursorLineStart,
   history,
   historyKeymap,
   insertNewlineAndIndent,
+  selectLineEnd,
+  selectLineStart,
   standardKeymap,
 } from '@codemirror/commands';
 import {
@@ -17,7 +21,7 @@ import {
   syntaxHighlighting,
 } from '@codemirror/language';
 import { Extension } from '@codemirror/state';
-import { drawSelection, EditorView, keymap, tooltips } from '@codemirror/view';
+import { type Command, EditorView, keymap, tooltips } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 import { useContext, useEffect, useRef } from 'react';
 
@@ -28,6 +32,7 @@ import { placeholder } from '~/modules/placeable/placeholder';
 import type { MessageEntry } from '~/utils/message';
 import { editablePattern } from '~/utils/message/editablePattern';
 import { entryPatterns } from '~/utils/message/entryPatterns';
+import { emptyEditorCaret } from './editFieldCaret';
 import { decoratorPlugin } from './decoratorPlugin';
 import {
   useHandleCtrlShiftArrow,
@@ -80,12 +85,23 @@ const style = HighlightStyle.define([
   { tag: tags.string },
 ]);
 
+/**
+ * stop Home/End from falling through to the default cursorLineBoundary* commands
+ */
+const atLineBoundary =
+  (command: Command): Command =>
+  (view) => {
+    command(view);
+    return true;
+  };
+
 export const getExtensions = (
   entry: MessageEntry,
   ref: ReturnType<typeof useKeyHandlers>,
+  initialDoc = '',
 ): Extension[] => [
   history(),
-  drawSelection(),
+  emptyEditorCaret(initialDoc.length === 0),
   // .main-column sets overflow-y:auto, which disables overflow-x:visible,
   // and so an absolute-positioned tooltip in the .editor would introduce
   // horizontal scrolling if it overflows the right edge of .main-column.
@@ -124,6 +140,30 @@ export const getExtensions = (
       run: () => ref.current.onCtrlShiftBackspace(),
     },
     { key: 'Shift-Ctrl-c', run: () => ref.current.onCtrlShiftC() },
+    {
+      key: 'Home',
+      run: atLineBoundary(cursorLineStart),
+      shift: atLineBoundary(selectLineStart),
+      preventDefault: true,
+    },
+    {
+      key: 'End',
+      run: atLineBoundary(cursorLineEnd),
+      shift: atLineBoundary(selectLineEnd),
+      preventDefault: true,
+    },
+    {
+      mac: 'Cmd-ArrowLeft',
+      run: atLineBoundary(cursorLineStart),
+      shift: atLineBoundary(selectLineStart),
+      preventDefault: true,
+    },
+    {
+      mac: 'Cmd-ArrowRight',
+      run: atLineBoundary(cursorLineEnd),
+      shift: atLineBoundary(selectLineEnd),
+      preventDefault: true,
+    },
     ...closeBracketsKeymap,
     ...standardKeymap,
     ...historyKeymap,
