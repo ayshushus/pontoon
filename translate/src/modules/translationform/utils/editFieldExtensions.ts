@@ -6,13 +6,9 @@ import {
   type CompletionSource,
 } from '@codemirror/autocomplete';
 import {
-  cursorLineEnd,
-  cursorLineStart,
   history,
   historyKeymap,
   insertNewlineAndIndent,
-  selectLineEnd,
-  selectLineStart,
   standardKeymap,
 } from '@codemirror/commands';
 import {
@@ -21,7 +17,7 @@ import {
   syntaxHighlighting,
 } from '@codemirror/language';
 import { Extension } from '@codemirror/state';
-import { type Command, EditorView, keymap, tooltips } from '@codemirror/view';
+import { EditorView, keymap, tooltips } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 import { useContext, useEffect, useRef } from 'react';
 
@@ -85,16 +81,6 @@ const style = HighlightStyle.define([
   { tag: tags.string },
 ]);
 
-/**
- * stop Home/End from falling through to the default cursorLineBoundary* commands
- */
-const atLineBoundary =
-  (command: Command): Command =>
-  (view) => {
-    command(view);
-    return true;
-  };
-
 export const getExtensions = (
   entry: MessageEntry,
   ref: ReturnType<typeof useKeyHandlers>,
@@ -140,30 +126,6 @@ export const getExtensions = (
       run: () => ref.current.onCtrlShiftBackspace(),
     },
     { key: 'Shift-Ctrl-c', run: () => ref.current.onCtrlShiftC() },
-    {
-      key: 'Home',
-      run: atLineBoundary(cursorLineStart),
-      shift: atLineBoundary(selectLineStart),
-      preventDefault: true,
-    },
-    {
-      key: 'End',
-      run: atLineBoundary(cursorLineEnd),
-      shift: atLineBoundary(selectLineEnd),
-      preventDefault: true,
-    },
-    {
-      mac: 'Cmd-ArrowLeft',
-      run: atLineBoundary(cursorLineStart),
-      shift: atLineBoundary(selectLineStart),
-      preventDefault: true,
-    },
-    {
-      mac: 'Cmd-ArrowRight',
-      run: atLineBoundary(cursorLineEnd),
-      shift: atLineBoundary(selectLineEnd),
-      preventDefault: true,
-    },
     ...closeBracketsKeymap,
     ...standardKeymap,
     ...historyKeymap,
