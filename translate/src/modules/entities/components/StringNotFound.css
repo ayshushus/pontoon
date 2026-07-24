@@ -46,7 +46,7 @@
   color: var(--white-1);
   font-size: 14px;
   font-weight: 300;
-  height: 40px;
+  min-height: 40px;
   line-height: 17px;
   padding: 10px 25px;
 }
