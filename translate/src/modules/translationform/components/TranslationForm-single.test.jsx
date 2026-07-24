@@ -95,6 +95,25 @@ describe('<TranslationForm> with one field', () => {
     });
   });
 
+  it('draws the caret only while the field is empty', () => {
+    // drawSelection fixes tiny native caret (#4249) but regresses RTL selection (#4240)
+    // hence emptyEditorCaret toggles it on the empty <-> content boundary
+    const { view } = mountForm('');
+    const hasDrawnCaret = () => !!view.dom.querySelector('.cm-cursorLayer');
+
+    expect(hasDrawnCaret()).toBe(true);
+
+    act(() => view.dispatch({ changes: { from: 0, insert: 'test' } }));
+    expect(hasDrawnCaret()).toBe(false);
+
+    act(() =>
+      view.dispatch({
+        changes: { from: 0, to: view.state.doc.length, insert: '' },
+      }),
+    );
+    expect(hasDrawnCaret()).toBe(true);
+  });
+
   it('updates the translation when setEditorSelection is passed with focus', async () => {
     const { actions, getResult, view } = mountForm('Hello');
     act(() => {
