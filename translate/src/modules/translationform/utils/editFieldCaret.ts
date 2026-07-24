@@ -1,7 +1,8 @@
 import { Compartment, type Extension } from '@codemirror/state';
 import { drawSelection, EditorView } from '@codemirror/view';
 
-// enable drawSelection only if content is empty or transitioning to empty
+// enable drawSelection (draw via CM) iff content is empty
+// prevents RTL text selection and caret invisibility bug #4240
 export function emptyEditorCaret(emptyAtInit: boolean): Extension {
   const drawn = new Compartment();
   return [
