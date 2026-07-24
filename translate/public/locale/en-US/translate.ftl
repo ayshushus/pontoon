@@ -359,7 +359,7 @@ entities-StringNotFound--description-in-project = String { $stringId } is in { $
 
 entities-StringNotFound--description-in-all-projects = String { $stringId } is in { $stringResource } ({ $stringProject }). You’re viewing all projects.
 
-entities-StringNotFound--go-to-string = See string { $stringId } in { $stringResource }
+entities-StringNotFound--go-to-string = See string in { $stringResource }
 entities-StringNotFound--go-to-string-hint = Search for the requested string, reset current filters.
 
 entities-StringNotFound--show-matching = See other strings in { $queryLabel }
