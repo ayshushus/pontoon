@@ -25,7 +25,8 @@ export function StringNotFound({
 
   const { push } = location;
   const stringId = String(entityLocation.pk);
-  const { project: stringProject, resource: stringResource } = entityLocation;
+  const stringProject = entityLocation.project;
+  const stringResource = entityLocation.resource;
 
   const viewProject = location.project;
   const viewResource = location.resource;
@@ -49,77 +50,42 @@ export function StringNotFound({
 
   const showMatching = () => push({ entity: 0 });
 
-  let description: React.ReactElement;
+  let descriptionId: string;
   if (filteredOut) {
-    description = (
-      <Localized
-        id='entities-StringNotFound--description-filtered'
-        vars={{ stringId, stringProject, stringResource }}
-      >
-        <p className='description'>
-          {`String ${stringId} is in ${stringResource} (${stringProject}), but it doesn’t match your current filters.`}
-        </p>
-      </Localized>
-    );
+    descriptionId = 'entities-StringNotFound--description-filtered';
   } else if (allProjects) {
-    description = (
-      <Localized
-        id='entities-StringNotFound--description-in-all-projects'
-        vars={{ stringId, stringProject, stringResource }}
-      >
-        <p className='description'>
-          {`String ${stringId} is in ${stringResource} (${stringProject}). You’re viewing all projects.`}
-        </p>
-      </Localized>
-    );
+    descriptionId = 'entities-StringNotFound--description-in-all-projects';
   } else if (allResources) {
-    description = (
-      <Localized
-        id='entities-StringNotFound--description-in-project'
-        vars={{ stringId, stringProject, stringResource, viewProject }}
-      >
-        <p className='description'>
-          {`String ${stringId} is in ${stringResource} (${stringProject}). You’re viewing ${viewProject}.`}
-        </p>
-      </Localized>
-    );
+    descriptionId = 'entities-StringNotFound--description-in-project';
   } else {
-    description = (
-      <Localized
-        id='entities-StringNotFound--description-in-resource'
-        vars={{
-          stringId,
-          stringProject,
-          stringResource,
-          viewResource,
-          viewProject,
-        }}
-      >
-        <p className='description'>
-          {`String ${stringId} is in ${stringResource} (${stringProject}). You’re viewing ${viewResource} (${viewProject}).`}
-        </p>
-      </Localized>
-    );
+    descriptionId = 'entities-StringNotFound--description-in-resource';
   }
 
   return (
     <section id='string-not-found'>
       <div className='inner'>
-        {description}
+        <Localized
+          id={descriptionId}
+          vars={{
+            stringId,
+            stringProject,
+            stringResource,
+            viewProject,
+            viewResource,
+          }}
+        >
+          <p className='description' />
+        </Localized>
         <div className='actions'>
           <div className='action'>
             <Localized
               id='entities-StringNotFound--go-to-string'
               vars={{ stringId, stringResource }}
             >
-              <button
-                onClick={goToString}
-              >{`See string ${stringId} in ${stringResource}`}</button>
+              <button onClick={goToString} />
             </Localized>
             <Localized id='entities-StringNotFound--go-to-string-hint'>
-              <span className='hint'>
-                Search for the requested string, reset current filters.
-              </span>
+              <span className='hint' />
             </Localized>
           </div>
           <div className='action'>
@@ -127,14 +93,10 @@ export function StringNotFound({
               id='entities-StringNotFound--show-matching'
               vars={{ queryLabel }}
             >
-              <button
-                onClick={showMatching}
-              >{`See other strings in ${queryLabel}`}</button>
+              <button onClick={showMatching} />
             </Localized>
             <Localized id='entities-StringNotFound--show-matching-hint'>
-              <span className='hint'>
-                Keep current filters, display the first available string.
-              </span>
+              <span className='hint' />
             </Localized>
           </div>
         </div>
