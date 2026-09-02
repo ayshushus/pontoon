@@ -30,6 +30,7 @@ import { editablePattern } from '~/utils/message/editablePattern';
 import { entryPatterns } from '~/utils/message/entryPatterns';
 import { emptyEditorCaret } from './editFieldCaret';
 import { decoratorPlugin } from './decoratorPlugin';
+import { ghostText } from './ghostText';
 import {
   useHandleCtrlShiftArrow,
   useHandleEnter,
@@ -85,6 +86,7 @@ export const getExtensions = (
   entry: MessageEntry,
   ref: ReturnType<typeof useKeyHandlers>,
   initialDoc = '',
+  imt?: { source: string; localeCode: string },
 ): Extension[] => [
   history(),
   emptyEditorCaret(initialDoc.length === 0),
@@ -130,6 +132,7 @@ export const getExtensions = (
     ...standardKeymap,
     ...historyKeymap,
   ]),
+  ...(imt && imt.localeCode === 'it' ? [ghostText(imt.source)] : []),
 ];
 
 /**

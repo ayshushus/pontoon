@@ -53,6 +53,7 @@ export const EditField = memo(
               messageEntryFromEntity(entity),
               keyHandlers,
               defaultValue,
+              { source: entity.original, localeCode: locale.code },
             );
             if (readOnly) {
               extensions.push(
