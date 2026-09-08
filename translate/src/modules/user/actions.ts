@@ -9,6 +9,8 @@ import { NotificationMessage } from '~/context/Notification';
 import {
   CHECKS_DISABLED,
   CHECKS_ENABLED,
+  DIRECTIONALITY_DISABLED,
+  DIRECTIONALITY_ENABLED,
   SUGGESTIONS_DISABLED,
   SUGGESTIONS_ENABLED,
 } from '~/modules/notification/messages';
@@ -40,6 +42,7 @@ export type UpdateAction = {
 export type Settings = {
   runQualityChecks?: boolean;
   forceSuggestions?: boolean;
+  showDirectionality?: boolean;
 };
 
 /**
@@ -64,6 +67,8 @@ function getNotification(setting: keyof Settings, value: boolean) {
       return value ? CHECKS_ENABLED : CHECKS_DISABLED;
     case 'forceSuggestions':
       return value ? SUGGESTIONS_ENABLED : SUGGESTIONS_DISABLED;
+    case 'showDirectionality':
+      return value ? DIRECTIONALITY_ENABLED : DIRECTIONALITY_DISABLED;
     default:
       throw new Error('Unsupported operation on setting: ' + setting);
   }

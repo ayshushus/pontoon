@@ -41,3 +41,17 @@
   color: var(--tags-string-color);
   white-space: pre-wrap;
 }
+
+.cm-dir-ltr {
+  background: color-mix(in srgb, var(--editor-dir-ltr) 15%, transparent);
+}
+
+.cm-dir-rtl {
+  background: color-mix(in srgb, var(--editor-dir-rtl) 15%, transparent);
+}
+
+.cm-dir-first-strong {
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in srgb, var(--editor-color) 45%, transparent),
+    inset 0 -1px 0 0 color-mix(in srgb, var(--editor-color) 45%, transparent);
+}

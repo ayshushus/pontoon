@@ -165,6 +165,24 @@ export const SUGGESTIONS_DISABLED: NotificationMessage = {
   type: 'info',
 };
 
+export const DIRECTIONALITY_ENABLED: NotificationMessage = {
+  content: (
+    <Localized id='notification--show-directionality-enabled'>
+      Show Directionality enabled
+    </Localized>
+  ),
+  type: 'info',
+};
+
+export const DIRECTIONALITY_DISABLED: NotificationMessage = {
+  content: (
+    <Localized id='notification--show-directionality-disabled'>
+      Show Directionality disabled
+    </Localized>
+  ),
+  type: 'info',
+};
+
 export const FTL_NOT_SUPPORTED_RICH_EDITOR: NotificationMessage = {
   content: (
     <Localized id='notification--ftl-not-supported-rich-editor'>

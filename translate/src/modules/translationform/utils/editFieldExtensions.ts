@@ -31,6 +31,10 @@ import { entryPatterns } from '~/utils/message/entryPatterns';
 import { emptyEditorCaret } from './editFieldCaret';
 import { decoratorPlugin } from './decoratorPlugin';
 import {
+  directionalityCompartment,
+  directionalityConfig,
+} from './directionality';
+import {
   useHandleCtrlShiftArrow,
   useHandleEnter,
   useHandleEscape,
@@ -85,6 +89,7 @@ export const getExtensions = (
   entry: MessageEntry,
   ref: ReturnType<typeof useKeyHandlers>,
   initialDoc = '',
+  showDirectionality = false,
 ): Extension[] => [
   history(),
   emptyEditorCaret(initialDoc.length === 0),
@@ -103,6 +108,7 @@ export const getExtensions = (
         : commonMode,
   ),
   syntaxHighlighting(style),
+  directionalityCompartment.of(directionalityConfig(showDirectionality)),
   decoratorPlugin,
   keymap.of([
     {

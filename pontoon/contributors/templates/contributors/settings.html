@@ -374,6 +374,15 @@
               title='Save suggestions instead of translations')
             }}
           {% endif %}
+
+          {{
+            Checkbox.checkbox(
+            'Show directionality',
+            class='show-directionality',
+            attribute='show_directionality',
+            is_enabled=user.profile.show_directionality,
+            title='Highlight which parts of a translation run left-to-right and which run right-to-left')
+          }}
         </div>
       </section>
 

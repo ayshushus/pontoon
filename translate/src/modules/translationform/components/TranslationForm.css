@@ -108,10 +108,13 @@
 }
 
 .cm-editor .cm-content {
-  caret-color: var(--editor-color);
+  caret-color: var(--editor-caret-color, var(--editor-color));
 }
 
-.cm-editor .cm-cursor,
+.cm-editor .cm-cursor {
+  border-left-color: var(--editor-caret-color, var(--editor-color));
+}
+
 .cm-editor .cm-dropCursor {
   border-left-color: var(--editor-color);
 }

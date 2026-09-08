@@ -42,6 +42,7 @@ export type ApiUserData = {
   settings?: {
     quality_checks: boolean;
     force_suggestions: boolean;
+    show_directionality: boolean;
     search_exclude_source_strings: boolean;
     search_identifiers: boolean;
     search_match_case: boolean;
@@ -99,7 +100,7 @@ export const markAllNotificationsAsRead = (): Promise<void> =>
 
 export function updateUserSetting(
   username: string,
-  setting: 'forceSuggestions' | 'runQualityChecks',
+  setting: 'forceSuggestions' | 'runQualityChecks' | 'showDirectionality',
   value: boolean,
 ): Promise<string> {
   let attribute: string;
@@ -109,6 +110,9 @@ export function updateUserSetting(
       break;
     case 'runQualityChecks':
       attribute = 'quality_checks';
+      break;
+    case 'showDirectionality':
+      attribute = 'show_directionality';
       break;
   }
 

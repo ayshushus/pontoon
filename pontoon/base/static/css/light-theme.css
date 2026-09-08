@@ -70,6 +70,8 @@
   --editor-readonly-background: #e8eaed;
   --editor-selection-background: #bee2f8;
   --editor-placeholder-color: #6f7479;
+  --editor-dir-ltr: #0b62a4;
+  --editor-dir-rtl: #b03055;
   --time-range-handles: #888888;
 
   /* Highlights */

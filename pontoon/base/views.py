@@ -1173,6 +1173,7 @@ def user_data(request):
             "settings": {
                 "quality_checks": user.profile.quality_checks,
                 "force_suggestions": user.profile.force_suggestions,
+                "show_directionality": user.profile.show_directionality,
                 "search_exclude_source_strings": user.profile.search_exclude_source_strings,
                 "search_identifiers": user.profile.search_identifiers,
                 "search_match_case": user.profile.search_match_case,

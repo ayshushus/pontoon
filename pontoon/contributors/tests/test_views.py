@@ -247,6 +247,21 @@ def test_toggle_user_profile_attribute(member):
 
 
 @pytest.mark.django_db
+def test_toggle_show_directionality(member):
+    """show_directionality is togglable and the change reaches the profile."""
+    assert member.user.profile.show_directionality is False
+
+    for value, expected in (("true", True), ("false", False)):
+        response = member.client.post(
+            "/user/attributes/toggle/",
+            {"attribute": "show_directionality", "value": value},
+        )
+        assert response.status_code == 200
+        member.user.profile.refresh_from_db()
+        assert member.user.profile.show_directionality is expected
+
+
+@pytest.mark.django_db
 def test_toggle_editor_theme(member):
     """toggle_editor_theme accepts valid choices and rejects invalid ones."""
     url = "/user/editor-theme/"

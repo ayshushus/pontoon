@@ -100,6 +100,22 @@ export function EditorSettingsDialog({
         </Localized>
       ) : null}
 
+      <Localized
+        id='editor-EditorSettings--show-directionality'
+        attrs={{ title: true }}
+        elems={{ glyph: <i className='fas fa-fw' /> }}
+      >
+        <li
+          className={
+            'check-box' + (settings.showDirectionality ? ' enabled' : '')
+          }
+          title='Highlight which parts of a translation run left-to-right and which run right-to-left'
+          onClick={() => toggleSetting('showDirectionality')}
+        >
+          {'<glyph></glyph>Show directionality'}
+        </li>
+      </Localized>
+
       <li className='horizontal-separator'></li>
       <div className='appearance'>
         <Localized id='editor-EditorSettings--theme-title'>

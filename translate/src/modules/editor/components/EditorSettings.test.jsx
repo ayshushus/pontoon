@@ -129,6 +129,35 @@ describe('<EditorSettingsDialog>', () => {
     expect(toggleSettingMock).toHaveBeenCalledTimes(2);
     expect(toggleSettingMock).toHaveBeenCalledWith('forceSuggestions');
   });
+
+  it('toggles the showDirectionality setting', () => {
+    const [{ getAllByRole, rerender }, toggleSettingMock] =
+      createEditorSettingsDialog();
+
+    // Do it once to turn it on.
+    fireEvent.click(getAllByRole('listitem')[2]);
+    expect(toggleSettingMock.mock.calls).toMatchObject([
+      ['showDirectionality'],
+    ]);
+
+    // Do it twice to turn it off.
+    rerender(
+      <MockLocalizationProvider>
+        <EditorSettingsDialog
+          settings={{
+            runQualityChecks: false,
+            forceSuggestions: false,
+            showDirectionality: true,
+          }}
+          toggleSetting={toggleSettingMock}
+        />
+      </MockLocalizationProvider>,
+    );
+
+    fireEvent.click(getAllByRole('listitem')[2]);
+    expect(toggleSettingMock).toHaveBeenCalledTimes(2);
+    expect(toggleSettingMock).toHaveBeenCalledWith('showDirectionality');
+  });
 });
 
 describe('<EditorSettings>', () => {
