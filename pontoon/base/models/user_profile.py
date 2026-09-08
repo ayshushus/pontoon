@@ -126,6 +126,8 @@ class UserProfile(models.Model):
     # Translation settings
     quality_checks = models.BooleanField(default=True)
     force_suggestions = models.BooleanField(default=False)
+    show_invisibles = models.BooleanField(default=False)
+    show_directionality = models.BooleanField(default=False)
 
     # Search settings
     search_exclude_source_strings = models.BooleanField(default=False)

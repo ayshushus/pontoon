@@ -100,6 +100,36 @@ export function EditorSettingsDialog({
         </Localized>
       ) : null}
 
+      <Localized
+        id='editor-EditorSettings--show-invisibles'
+        attrs={{ title: true }}
+        elems={{ glyph: <i className='fas fa-fw' /> }}
+      >
+        <li
+          className={'check-box' + (settings.showInvisibles ? ' enabled' : '')}
+          title='Show invisible characters and whitespace'
+          onClick={() => toggleSetting('showInvisibles')}
+        >
+          {'<glyph></glyph>Show invisible characters'}
+        </li>
+      </Localized>
+
+      <Localized
+        id='editor-EditorSettings--show-directionality'
+        attrs={{ title: true }}
+        elems={{ glyph: <i className='fas fa-fw' /> }}
+      >
+        <li
+          className={
+            'check-box' + (settings.showDirectionality ? ' enabled' : '')
+          }
+          title='Highlight text direction (LTR/RTL runs and first-strong regions)'
+          onClick={() => toggleSetting('showDirectionality')}
+        >
+          {'<glyph></glyph>Show directionality'}
+        </li>
+      </Localized>
+
       <li className='horizontal-separator'></li>
       <div className='appearance'>
         <Localized id='editor-EditorSettings--theme-title'>

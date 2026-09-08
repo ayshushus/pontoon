@@ -362,6 +362,24 @@
               title='Save suggestions instead of translations')
             }}
           {% endif %}
+
+          {{
+            Checkbox.checkbox(
+            'Show invisible characters',
+            class='show-invisibles',
+            attribute='show_invisibles',
+            is_enabled=user.profile.show_invisibles,
+            title='Show invisible characters and whitespace in the translation editor')
+          }}
+
+          {{
+            Checkbox.checkbox(
+            'Show directionality',
+            class='show-directionality',
+            attribute='show_directionality',
+            is_enabled=user.profile.show_directionality,
+            title='Highlight text direction (LTR/RTL runs and first-strong regions) in the translation editor')
+          }}
         </div>
       </section>
 

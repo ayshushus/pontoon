@@ -15,6 +15,8 @@ export const USER = 'user';
 export type SettingsState = {
   readonly runQualityChecks: boolean;
   readonly forceSuggestions: boolean;
+  readonly showInvisibles: boolean;
+  readonly showDirectionality: boolean;
   readonly searchExcludeSourceStrings: boolean;
   readonly searchIdentifiers: boolean;
   readonly searchMatchCase: boolean;
@@ -25,6 +27,8 @@ export type SettingsState = {
 const initialSettings: SettingsState = {
   runQualityChecks: true,
   forceSuggestions: true,
+  showInvisibles: false,
+  showDirectionality: false,
   searchExcludeSourceStrings:
     DEFAULT_SEARCH_OPTIONS.search_exclude_source_strings,
   searchIdentifiers: DEFAULT_SEARCH_OPTIONS.search_identifiers,
@@ -46,6 +50,8 @@ function settings(
       return {
         runQualityChecks: action.data.settings.quality_checks,
         forceSuggestions: action.data.settings.force_suggestions,
+        showInvisibles: action.data.settings.show_invisibles ?? false,
+        showDirectionality: action.data.settings.show_directionality ?? false,
         searchExcludeSourceStrings:
           action.data.settings.search_exclude_source_strings ??
           DEFAULT_SEARCH_OPTIONS.search_exclude_source_strings,

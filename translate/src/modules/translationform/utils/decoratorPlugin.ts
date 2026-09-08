@@ -131,11 +131,22 @@ export const decoratorPlugin = ViewPlugin.fromClass(
           EditorView.bidiIsolatedRanges.of(get_),
         ];
       };
+      const atomic = (
+        get: (deco: ReturnType<typeof getDecorations>) => DecorationSet,
+      ) =>
+        EditorView.atomicRanges.of((view) => {
+          const pi = view.plugin(plugin);
+          return pi && view.textDirection === Direction.RTL
+            ? get(pi.decorations)
+            : Decoration.none;
+        });
       return [
         Prec.high(list((deco) => deco.placeholdersInsideQuotes)),
         Prec.default(list((deco) => deco.literals)),
         Prec.low(list((deco) => deco.placeholdersOutsideQuotes)),
         Prec.lowest(list((deco) => deco.tagsAndSpellcheck)),
+        atomic((deco) => deco.placeholdersInsideQuotes),
+        atomic((deco) => deco.placeholdersOutsideQuotes),
       ];
     },
   },

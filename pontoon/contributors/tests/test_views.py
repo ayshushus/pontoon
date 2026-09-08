@@ -245,6 +245,15 @@ def test_toggle_user_profile_attribute(member):
     response = member.client.post("/user/attributes/toggle/", params)
     assert response.status_code == 200
 
+    params = {
+        "attribute": "show_invisibles",
+        "value": "true",
+    }
+    response = member.client.post("/user/attributes/toggle/", params)
+    assert response.status_code == 200
+    member.user.profile.refresh_from_db()
+    assert member.user.profile.show_invisibles is True
+
 
 @pytest.mark.django_db
 def test_toggle_editor_theme(member):

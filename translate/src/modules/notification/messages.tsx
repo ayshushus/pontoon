@@ -165,6 +165,42 @@ export const SUGGESTIONS_DISABLED: NotificationMessage = {
   type: 'info',
 };
 
+export const SHOW_INVISIBLES_ENABLED: NotificationMessage = {
+  content: (
+    <Localized id='notification--show-invisibles-enabled'>
+      Show invisible characters enabled
+    </Localized>
+  ),
+  type: 'info',
+};
+
+export const SHOW_INVISIBLES_DISABLED: NotificationMessage = {
+  content: (
+    <Localized id='notification--show-invisibles-disabled'>
+      Show invisible characters disabled
+    </Localized>
+  ),
+  type: 'info',
+};
+
+export const SHOW_DIRECTIONALITY_ENABLED: NotificationMessage = {
+  content: (
+    <Localized id='notification--show-directionality-enabled'>
+      Show directionality enabled
+    </Localized>
+  ),
+  type: 'info',
+};
+
+export const SHOW_DIRECTIONALITY_DISABLED: NotificationMessage = {
+  content: (
+    <Localized id='notification--show-directionality-disabled'>
+      Show directionality disabled
+    </Localized>
+  ),
+  type: 'info',
+};
+
 export const FTL_NOT_SUPPORTED_RICH_EDITOR: NotificationMessage = {
   content: (
     <Localized id='notification--ftl-not-supported-rich-editor'>

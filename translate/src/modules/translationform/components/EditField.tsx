@@ -16,8 +16,17 @@ import { EditFieldHandle, EditorActions } from '~/context/Editor';
 import { Locale } from '~/context/Locale';
 import { editorThemeClass, ThemeContext } from '~/context/Theme';
 import { useReadonlyEditor } from '~/hooks/useReadonlyEditor';
+import { useAppSelector } from '~/hooks';
 
 import { getExtensions, useKeyHandlers } from '../utils/editFieldExtensions';
+import {
+  invisibleCharsCompartment,
+  invisibleCharsConfig,
+} from '../utils/invisibleChars';
+import {
+  directionalityCompartment,
+  directionalityConfig,
+} from '../utils/directionality';
 import { EntityView } from '~/context/EntityView';
 import { messageEntryFromEntity } from '~/utils/message/fromEntity';
 
@@ -44,6 +53,12 @@ export const EditField = memo(
       const { entity } = useContext(EntityView);
       const { setResultFromInput } = useContext(EditorActions);
       const keyHandlers = useKeyHandlers();
+      const showInvisibles = useAppSelector(
+        (state) => state.user.settings.showInvisibles,
+      );
+      const showDirectionality = useAppSelector(
+        (state) => state.user.settings.showDirectionality,
+      );
       const [view, setView] = useState<EditorView | null>(null);
 
       const initView = useCallback(
@@ -53,6 +68,8 @@ export const EditField = memo(
               messageEntryFromEntity(entity),
               keyHandlers,
               defaultValue,
+              showInvisibles,
+              showDirectionality,
             );
             if (readOnly) {
               extensions.push(
@@ -100,6 +117,22 @@ export const EditField = memo(
         [view],
       );
       useEffect(() => setValue(defaultValue), [defaultValue]);
+
+      useEffect(() => {
+        view?.dispatch({
+          effects: invisibleCharsCompartment.reconfigure(
+            invisibleCharsConfig(showInvisibles),
+          ),
+        });
+      }, [showInvisibles, view]);
+
+      useEffect(() => {
+        view?.dispatch({
+          effects: directionalityCompartment.reconfigure(
+            directionalityConfig(showDirectionality),
+          ),
+        });
+      }, [showDirectionality, view]);
 
       useImperativeHandle<EditFieldHandle, EditFieldHandle>(
         ref,

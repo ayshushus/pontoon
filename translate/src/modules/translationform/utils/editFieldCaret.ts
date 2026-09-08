@@ -1,5 +1,21 @@
 import { Compartment, type Extension } from '@codemirror/state';
-import { drawSelection, EditorView } from '@codemirror/view';
+import {
+  type Command,
+  Direction,
+  drawSelection,
+  EditorView,
+  type KeyBinding,
+} from '@codemirror/view';
+import {
+  cursorLineBoundaryBackward,
+  cursorLineBoundaryForward,
+  cursorLineBoundaryLeft,
+  cursorLineBoundaryRight,
+  selectLineBoundaryBackward,
+  selectLineBoundaryForward,
+  selectLineBoundaryLeft,
+  selectLineBoundaryRight,
+} from '@codemirror/commands';
 
 // drawSelection fixes tiny native caret (#4249) but regresses RTL selection (#4240)
 // hence emptyEditorCaret toggles it on the empty <-> content boundary
@@ -18,3 +34,26 @@ export function emptyEditorCaret(emptyAtInit: boolean): Extension {
     }),
   ];
 }
+
+const byDirection =
+  (rtl: Command, ltr: Command): Command =>
+  (view) => {
+    if (view.textDirection !== Direction.RTL) return ltr(view);
+    rtl(view);
+    return true;
+  };
+
+export const bidiCaretKeymap: readonly KeyBinding[] = [
+  {
+    mac: 'Cmd-ArrowLeft',
+    run: byDirection(cursorLineBoundaryBackward, cursorLineBoundaryLeft),
+    shift: byDirection(selectLineBoundaryBackward, selectLineBoundaryLeft),
+    preventDefault: true,
+  },
+  {
+    mac: 'Cmd-ArrowRight',
+    run: byDirection(cursorLineBoundaryForward, cursorLineBoundaryRight),
+    shift: byDirection(selectLineBoundaryForward, selectLineBoundaryRight),
+    preventDefault: true,
+  },
+];

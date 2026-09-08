@@ -99,7 +99,11 @@ export const markAllNotificationsAsRead = (): Promise<void> =>
 
 export function updateUserSetting(
   username: string,
-  setting: 'forceSuggestions' | 'runQualityChecks',
+  setting:
+    | 'forceSuggestions'
+    | 'runQualityChecks'
+    | 'showInvisibles'
+    | 'showDirectionality',
   value: boolean,
 ): Promise<string> {
   let attribute: string;
@@ -109,6 +113,12 @@ export function updateUserSetting(
       break;
     case 'runQualityChecks':
       attribute = 'quality_checks';
+      break;
+    case 'showInvisibles':
+      attribute = 'show_invisibles';
+      break;
+    case 'showDirectionality':
+      attribute = 'show_directionality';
       break;
   }
 

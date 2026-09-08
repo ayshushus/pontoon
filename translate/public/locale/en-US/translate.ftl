@@ -156,6 +156,12 @@ editor-EditorSettings--toolkit-checks = <glyph></glyph>Translate Toolkit checks
 editor-EditorSettings--force-suggestions = <glyph></glyph>Make suggestions
     .title = Save suggestions instead of translations
 
+editor-EditorSettings--show-invisibles = <glyph></glyph>Show invisible characters
+    .title = Show invisible characters and whitespace
+
+editor-EditorSettings--show-directionality = <glyph></glyph>Show directionality
+    .title = Highlight text direction (LTR/RTL runs and first-strong regions)
+
 editor-EditorSettings--theme-title = Editor theme
 
 editor-EditorSettings--theme-dark = <glyph></glyph> Dark
@@ -636,6 +642,10 @@ notification--tt-checks-enabled = Translate Toolkit Checks enabled
 notification--tt-checks-disabled = Translate Toolkit Checks disabled
 notification--make-suggestions-enabled = Make Suggestions enabled
 notification--make-suggestions-disabled = Make Suggestions disabled
+notification--show-invisibles-enabled = Show invisible characters enabled
+notification--show-invisibles-disabled = Show invisible characters disabled
+notification--show-directionality-enabled = Show directionality enabled
+notification--show-directionality-disabled = Show directionality disabled
 notification--ftl-not-supported-rich-editor = Translation not supported in rich editor
 notification--entity-not-found = Can’t load specified string
 notification--string-link-copied = Link copied to clipboard

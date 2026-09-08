@@ -297,6 +297,8 @@ def toggle_user_profile_attribute(request):
         # Editor settings
         "quality_checks",
         "force_suggestions",
+        "show_invisibles",
+        "show_directionality",
         # Search settings
         "search_exclude_source_strings",
         "search_identifiers",

@@ -28,8 +28,16 @@ import { placeholder } from '~/modules/placeable/placeholder';
 import type { MessageEntry } from '~/utils/message';
 import { editablePattern } from '~/utils/message/editablePattern';
 import { entryPatterns } from '~/utils/message/entryPatterns';
-import { emptyEditorCaret } from './editFieldCaret';
+import { bidiCaretKeymap, emptyEditorCaret } from './editFieldCaret';
 import { decoratorPlugin } from './decoratorPlugin';
+import {
+  invisibleCharsCompartment,
+  invisibleCharsConfig,
+} from './invisibleChars';
+import {
+  directionalityCompartment,
+  directionalityConfig,
+} from './directionality';
 import {
   useHandleCtrlShiftArrow,
   useHandleEnter,
@@ -85,6 +93,8 @@ export const getExtensions = (
   entry: MessageEntry,
   ref: ReturnType<typeof useKeyHandlers>,
   initialDoc = '',
+  showInvisibles = false,
+  showDirectionality = false,
 ): Extension[] => [
   history(),
   emptyEditorCaret(initialDoc.length === 0),
@@ -103,6 +113,8 @@ export const getExtensions = (
         : commonMode,
   ),
   syntaxHighlighting(style),
+  invisibleCharsCompartment.of(invisibleCharsConfig(showInvisibles)),
+  directionalityCompartment.of(directionalityConfig(showDirectionality)),
   decoratorPlugin,
   keymap.of([
     {
@@ -126,6 +138,7 @@ export const getExtensions = (
       run: () => ref.current.onCtrlShiftBackspace(),
     },
     { key: 'Shift-Ctrl-c', run: () => ref.current.onCtrlShiftC() },
+    ...bidiCaretKeymap,
     ...closeBracketsKeymap,
     ...standardKeymap,
     ...historyKeymap,
