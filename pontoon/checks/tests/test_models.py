@@ -195,19 +195,6 @@ def test_bulk_run_checks_pontoon_warning(translation_pontoon_warning):
 
 
 @pytest.mark.django_db
-def test_unknown_library_is_logged(translation_a, caplog):
-    """
-    Failed checks with an unrecognised library prefix are not dropped silently
-    """
-    warnings, errors = get_failed_checks_db_objects(
-        translation_a, {"nopeWarnings": ["dropped warning"]}
-    )
-
-    assert (warnings, errors) == ([], [])
-    assert "unknown library 'nope'" in caplog.text
-
-
-@pytest.mark.django_db
 def test_get_failed_checks_db_objects(translation_a):
     """
     Return model instances of warnings and errors

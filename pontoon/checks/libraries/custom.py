@@ -61,7 +61,7 @@ def run_custom_checks(entity: Entity, string: str) -> dict[str, list[str]]:
     format = cast(Resource.Format, entity.resource.format)
     errors: list[str] = []
     warnings: list[str] = []
-    ndb_warnings: list[str] = []
+    non_db_warnings: list[str] = []
     match format:
         case Resource.Format.ANDROID | Resource.Format.XCODE:
             try:
@@ -131,7 +131,7 @@ def run_custom_checks(entity: Entity, string: str) -> dict[str, list[str]]:
                 visitor = IsEmptyVisitor()
                 visitor.visit(translation_ast)
                 if visitor.is_empty:
-                    ndb_warnings.append("Empty translation")
+                    non_db_warnings.append("Empty translation")
 
         case Resource.Format.WEBEXT:
             try:
@@ -173,8 +173,8 @@ def run_custom_checks(entity: Entity, string: str) -> dict[str, list[str]]:
         checks["pErrors"] = errors
     if warnings:
         checks["pWarnings"] = warnings
-    if ndb_warnings:
-        checks["pndbWarnings"] = ndb_warnings
+    if non_db_warnings:
+        checks["pndbWarnings"] = non_db_warnings
     return checks
 
 

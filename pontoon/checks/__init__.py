@@ -12,9 +12,3 @@ DB_LIBRARIES = (
     "p",
     "cl",
 )
-
-# Warnings from these libraries reported back to the submitter and not saved in the DB
-NON_DB_LIBRARIES = (
-    "pndb",
-    "tt",
-)
